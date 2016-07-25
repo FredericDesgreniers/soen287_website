@@ -54,8 +54,8 @@ var Item = class {
 
         var itemImage = document.createElement("img");
         itemImage.classList.add("image");
-        itemImage.src = this.img;
-
+        itemImage.src = this.img+"d";
+        
         var buyBtn = document.createElement("input");
         buyBtn.type = "button";
         buyBtn.value = "Buy now for " + price + "$";
@@ -64,7 +64,6 @@ var Item = class {
         this.itemEl.appendChild(itemImage);
         this.itemEl.appendChild(itemDescription);
         this.itemEl.appendChild(buyBtn);
-        console.log(this.itemEl);
 
     }
 }
@@ -79,14 +78,16 @@ function loadItemsFromJson() {
 }
 
 function updateItemDisplay() {
-    container = document.createElement("div");
-    container.classList.add("itemContainer");
+    var itemsContainer = document.getElementById("items");
+    if(itemsContainer!=null){
+          
 
-    for (item of items) {
-        container.appendChild(item.itemEl);
+            for (item of items) {
+                itemsContainer.appendChild(item.itemEl);
+            }
+            
+        }
     }
-    document.getElementById("content").appendChild(container);
-}
 
 function format2(num) {
     if (num < 10) {
@@ -95,11 +96,10 @@ function format2(num) {
         return "" + num;
     }
 }
+
+
+
 var items = [];
-
-
-
-
 loadItemsFromJson();
 updateItemDisplay();
 var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
