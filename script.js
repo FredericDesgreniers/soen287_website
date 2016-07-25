@@ -54,7 +54,7 @@ var Item = class {
 
         var itemImage = document.createElement("img");
         itemImage.classList.add("image");
-        itemImage.src = this.img+"d";
+        itemImage.src = this.img;
         
         var buyBtn = document.createElement("input");
         buyBtn.type = "button";
