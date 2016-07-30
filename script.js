@@ -43,7 +43,7 @@ var Item = class {
         this.title = title;
         this.description = description;
         this.img = img;
-
+        this.price = price;
         this.itemEl = document.createElement("div");
         this.itemEl.classList.add("item");
         var itemTitle = document.createElement("h1");
@@ -56,14 +56,22 @@ var Item = class {
         itemImage.classList.add("image");
         itemImage.src = this.img;
         
-        var buyBtn = document.createElement("input");
-        buyBtn.type = "button";
-        buyBtn.value = "Buy now for " + price + "$";
-
+        var itemPrice = document.createElement("div");
+        itemPrice.classList.add("price");
+        itemPrice.innerHTML = this.price + "$";
+        
+        
+        var cartBtn = document.createElement("input");
+        cartBtn.type = "button";
+        cartBtn.value = "Add to cart";
+        cartBtn.classList.add("minBtn");
+        
+        
         this.itemEl.appendChild(itemTitle);
         this.itemEl.appendChild(itemImage);
         this.itemEl.appendChild(itemDescription);
-        this.itemEl.appendChild(buyBtn);
+        this.itemEl.appendChild(itemPrice);
+        this.itemEl.appendChild(cartBtn);
 
     }
 }
@@ -95,6 +103,59 @@ function format2(num) {
     } else {
         return "" + num;
     }
+}
+
+function processRegistration(){
+    var errStr = "";
+    var firstName,lastName,email,phoneNumber,password,cPassword;
+    try{
+        firstName = getVerifiedInput("First Name","firstName",/[A-z]*/);
+    }catch(e){
+        errStr+=e+"\n";
+    }
+    try{
+        lastName = getVerifiedInput("Last Name","lastName",/[A-z]*/);
+    }catch(e){
+        errStr+=e+"\n";
+    }
+    try{
+        email = getVerifiedInput("Email Address","email",/\w+\@((?!_)\w)+\.(com)/);
+    }catch(e){
+        errStr+=e+"\n";
+    }
+    try{
+        phoneNumber = getVerifiedInput("Phone Number","phoneNumber" ,/[0-9]{3}\-[0-9]{3}\-[0-9]{4}/);
+    }catch(e){
+        errStr+=e+"\n";
+    }
+    try{
+        password = getVerifiedInput("Password","password" ,/.*/);
+    }catch(e){
+        errStr+=e+"\n";
+    }
+    try{
+        cPassword = getVerifiedInput("Password Confirmation","cPassword" ,/.*/);
+    }catch(e){
+        errStr+=e+"\n";
+    }
+    if(password != cPassword){
+        errStr += "Passwords don't match!";
+    }
+    if(errStr != "")
+        alert(errStr);
+}
+
+function getVerifiedInput(name, id, regex){
+    var input = document.getElementById(id);
+    if(input.value == ""){
+        throw "Please enter a value for "+name;
+    }else{
+        var result = regex.exec(input.value);
+        if(result == null || result[0]==""){
+            throw name+" not valid.";
+        }
+    }
+    return input.value;
 }
 
 
