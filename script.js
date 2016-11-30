@@ -65,6 +65,38 @@ var Item = class {
         cartBtn.type = "button";
         cartBtn.value = "Add to cart";
         cartBtn.classList.add("minBtn");
+        cartBtn.classList.add("idle");
+        
+        cartBtn.onclick = function(){
+           
+              var request = new XMLHttpRequest();
+request.open('GET', 'addItem.php?name='+title+"&price="+price);
+            cartBtn.classList.add("processing");
+            request.onreadystatechange = function () {
+ 
+  if (request.readyState === 4) {
+      cartBtn.classList.remove("processing");
+      if(request.responseText.trim() === "true"){
+          cartBtn.classList.add("success");
+          setTimeout(function(){
+              cartBtn.classList.remove("success");
+          },2000);
+      }else{
+          cartBtn.classList.remove("processing");
+          cartBtn.classList.add("faillure");
+          setTimeout(function(){
+              cartBtn.classList.remove("faillure");
+              
+          },2000);
+      }
+  }
+
+  }
+
+            
+request.send(null);
+        };
+        
         
         
         this.itemEl.appendChild(itemTitle);
@@ -141,14 +173,21 @@ function processRegistration(){
     if(password != cPassword){
         errStr += "Passwords don't match!";
     }
-    if(errStr != "")
-        alert(errStr);
+    if(errStr != ""){
+
+        document.getElementById("tempHeader").innerHTML = "<div class=\"alert\">"+errStr+"</div>";
+        document.getElementById("tempHeader").classList.remove("hidden");
+        hideTempHeader();
+    }
+    else
+        window.location.href = ("registerCheck.php?fName="+firstName+"&lName="+lastName+"&email="+email+"&pNumber="+phoneNumber+"&password="+password+"&cPassword="+cPassword);
+    
 }
 
 function getVerifiedInput(name, id, regex){
     var input = document.getElementById(id);
     if(input.value == ""){
-        throw "Please enter a value for "+name;
+        throw "Please enter a value for "+name+". ";
     }else{
         var result = regex.exec(input.value);
         if(result == null || result[0]==""){
@@ -158,7 +197,11 @@ function getVerifiedInput(name, id, regex){
     return input.value;
 }
 
-
+function hideTempHeader(){
+    setTimeout(function(){
+    document.getElementById("tempHeader").classList.add("hidden");
+},500);
+}
 
 var items = [];
 loadItemsFromJson();
@@ -169,4 +212,8 @@ var months = ["January", "February", "March", "April", "May", "June", "July", "A
 setInterval(function () {
     var date = new Date();
     document.getElementById("time").innerHTML = days[date.getDay()] + ", " + months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " - " + format2(date.getHours()) + ":" + format2(date.getMinutes()) + ":" + format2(date.getSeconds());
+
 }, 0, 1000);
+
+hideTempHeader();
+
